@@ -1,0 +1,226 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
+import { ChangeUserRole, ChangeUserStatus, getAllUsers } from "@/services/user.service"
+import { toast } from "sonner"
+
+type User = {
+  id: string
+  name: string
+  email: string
+  role: "ADMIN" | "BUYER" | "AGENT"
+  isActive?: true | false
+}
+
+export default function MembersPage() {
+  const [users, setUsers] = useState<User[]>([])
+//   const [filteredUsers, setFilteredUsers] = useState<User[]>([])
+//   const [search, setSearch] = useState("")
+  const [loading, setLoading] = useState(true)
+
+  // 🌿 Fetch users
+  useEffect(() => {
+    const fetchUsers = async () => {
+         try {
+        const data=await getAllUsers()
+
+        setUsers(data)
+        // setFilteredUsers(data)
+      } catch (err) {
+        toast.error("Failed to load users")
+      } finally {
+        setLoading(false)
+      }
+     
+    }
+
+    fetchUsers()
+  }, [])
+
+//   // 🔍 Search
+//   useEffect(() => {
+//     const filtered = users.filter((user) =>
+//       user.name.toLowerCase().includes(search.toLowerCase())
+//     )
+//     setFilteredUsers(filtered)
+//   }, [search, users])
+
+  // 🔥 Change Role
+  const handleRoleChange = async (id: string, role: string) => {
+    try {
+      const data=await ChangeUserRole(id, role)
+
+      if (data.success) {
+        setUsers(data.data)
+        toast.success("User role updated")
+      }
+    } catch (err) {
+      toast.error("Failed to update role")
+    }
+  }
+
+  const handleStatusChange = async (id: string  , isActive: boolean) => {
+  try {
+    const result = await ChangeUserStatus(id, isActive)
+   
+
+    if (result.success) {
+      // ✅ update only that user (not whole array)
+      setUsers(result)
+      toast.success("User status updated")
+    }
+  } catch (err) {
+    
+    toast.error("Failed to update status")
+  }
+}
+// console.log("status update:",users);
+
+  return (
+    <div className="w-11/12 mx-auto py-10 space-y-8">
+
+      {/* 🌿 Header */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <h1 className="text-3xl font-bold">👥 All Members</h1>
+      </div>
+
+      {/* Loading */}
+      {loading && <p>Loading users...</p>}
+
+      {/* Table */}
+      {!loading && (
+        <div className="overflow-x-auto bg-background border rounded-2xl">
+          <table className="w-full text-sm">
+            <thead className="bg-background">
+              <tr>
+                <th className="p-3 text-left">Name</th>
+                <th className="p-3 text-left">Email</th>
+                <th className="p-3 text-left">Role</th>
+                <th className="p-3 text-left">Status</th>
+                <th className="p-3 text-center">Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {Array.isArray(users) && users.length > 0 ? (
+  users.map((user, index) => {
+    if (!user || !user.id) return null // 🛡️ skip invalid user
+
+    const role = user.role || "BUYER"
+
+    return (
+     <tr key={user.id || index} className="border-t">
+
+  {/* Name */}
+  <td className="p-3">
+    {user.name || "Unknown"}
+  </td>
+
+  {/* Email */}
+  <td className="p-3">
+    {user.email || "No email"}
+  </td>
+
+  {/* Role */}
+  <td className="p-3">
+    <span
+      className={`px-2 py-1 rounded text-xs ${
+        role === "ADMIN"
+          ? "bg-green-100 text-green-700"
+          : "bg-gray-100 text-gray-700"
+      }`}
+    >
+      {role}
+    </span>
+  </td>
+
+  {/* 🟢 Status */}
+  <td className="p-3">
+    <span
+      className={`px-2 py-1 rounded text-xs ${
+        user.isActive === false
+          ? "bg-red-100 text-red-700"
+          : "bg-blue-100 text-blue-700"
+      }`}
+    >
+      {user.isActive === false ? "BLOCKED" : "ACTIVE"}
+    </span>
+  </td>
+
+  {/* Actions */}
+  <td className="p-3 text-center space-x-2">
+
+    {/* Role */}
+    {role !== "ADMIN" ? (
+      <Button
+        size="sm"
+        onClick={() =>
+          user.id && handleRoleChange(user.id, "ADMIN")
+        }
+      >
+        Make Admin
+      </Button>
+    ) : (
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() =>
+          user.id && handleRoleChange(user.id, "BUYER")
+        }
+      >
+        Remove Admin
+      </Button>
+    )}
+
+    {/* Status */}
+    {user.isActive === false || user.role === "ADMIN" ? (
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() =>
+          user.id && handleStatusChange(user.id, true)
+        }
+      >
+        Unblock
+      </Button>
+    ) : (
+      <Button
+        size="sm"
+        variant="destructive"
+        onClick={() =>
+          user.id && handleStatusChange(user.id, false)
+        }
+      >
+        Block
+      </Button>
+    )}
+
+  </td>
+</tr>
+    )
+  })
+) : (
+  <tr>
+    <td
+      colSpan={4}
+      className="text-center py-6 text-muted-foreground"
+    >
+      No users found 🌿
+    </td>
+  </tr>
+)}
+            </tbody>
+          </table>
+
+          {/* Empty */}
+          {users.length === 0 && (
+            <p className="text-center py-6 text-muted-foreground">
+              No members found 🌿
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
