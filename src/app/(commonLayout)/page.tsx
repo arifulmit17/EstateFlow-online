@@ -6,7 +6,7 @@ import { HowItWorksSection } from "@/components/homepage/HowitWorks";
 import { NewsletterSection } from "@/components/homepage/Newsletter";
 import { OfferSection } from "@/components/homepage/Offers";
 import { PartnersSection } from "@/components/homepage/PartnersSection";
-import PopularIdeas from "@/components/homepage/PopularIdeas";
+import PopularProperties from "@/components/homepage/PopularProperties";
 import { StatsSection } from "@/components/homepage/Statistics";
 import { FeedbackSection } from "@/components/homepage/Testimonial";
 
@@ -20,10 +20,10 @@ export default function Home() {
       </section>
       <section className="section">
             <div className="w-full text-5xl text-center"> 
-               <h1 >Popular Ideas</h1>
+               <h1 >Popular listings</h1>
             </div>
             
-           <PopularIdeas></PopularIdeas>
+           <PopularProperties></PopularProperties>
       </section>
       <section className="section">
             <div className="w-full text-5xl text-center"> 

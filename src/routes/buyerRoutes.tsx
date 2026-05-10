@@ -13,12 +13,12 @@ export const buyerRoutes: Route[] = [
         url: "/dashboard/profile",
       },
       {
-        title: "Create Ideas",
-        url: "/dashboard/createidea",
+        title: "Create listing",
+        url: "/dashboard/create-listing",
       },
       {
-        title: "My Ideas",
-        url: "/dashboard/myidea",
+        title: "My listings",
+        url: "/dashboard/my-listings",
       },
     ],
   },

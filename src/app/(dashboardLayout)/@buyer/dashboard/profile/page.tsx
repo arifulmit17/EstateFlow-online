@@ -4,127 +4,105 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import EditProfileModal from "@/components/shared/EditProfileModal"
 import { getUser } from "@/services/auth.service"
-import { fetchIdeasByUser } from "@/services/idea2.service"
-
-
-type Idea = {
-  id: string
-  title: string
-  description: string
-  status: "UNDER_REVIEW" | "APPROVED" | "REJECTED"
-  category: { name: string }
-  votes: { type: "UP" | "DOWN" }[]
-}
+import { fetchPropertiesByAgentId } from "@/services/property2.service"
+import type { Property } from "@/types/property.types"
 
 type User = {
   id: string
   name: string
   email: string
-  role: string
+  avatar?: string | null
+  phone?: string | null
+  bio?: string | null
+  role: "ADMIN" | "BUYER" | "AGENT"
+  isActive: boolean
+  isVerified: boolean
+  provider: "CREDENTIALS" | "GOOGLE" | "GITHUB"
+  refreshToken?: string | null
+  lastLoginAt?: string | null
+  createdAt: string
+  updatedAt: string
 }
 
-export default function ProfilePage() {
+export default function BuyerDashboardProfilePage() {
   const [user, setUser] = useState<User | null>(null)
-  const [ideas, setIdeas] = useState<Idea[]>([])
+  const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [open, setOpen] = useState(false)
 
-  // 🌿 Fetch user
   useEffect(() => {
     const fetchUser = async () => {
       const userData = await getUser()
-      
       setUser(userData)
+      setLoading(false)
     }
-
     fetchUser()
   }, [])
 
-  // 🌱 Fetch user's ideas
   useEffect(() => {
-    const fetchIdeas = async () => {
-      const ideaData=await fetchIdeasByUser(user?.id || "")
-      
-      setIdeas(ideaData)
-      setLoading(false)
+    const load = async () => {
+      if (!user?.id || user.role !== "AGENT") {
+        setProperties([])
+        return
+      }
+      const data = await fetchPropertiesByAgentId(user.id)
+      setProperties(data)
     }
-
-    fetchIdeas()
+    load()
   }, [user])
 
-  // 📊 Calculate stats
-  const totalVotes = ideas?.reduce((acc, idea) => {
-    return (
-      acc +
-      idea.votes.reduce((a, v) => (v.type === "UP" ? a + 1 : a - 1), 0)
-    )
-  }, 0)
+  const totalViews = properties.reduce((acc, p) => acc + (p.views || 0), 0)
+  const activeListings = properties.filter((p) => p.status === "ACTIVE").length
 
   return (
-    <div className="w-11/12 mx-auto py-10 space-y-10">
-
-      {/* 🌿 Profile Header */}
-      <div className="flex flex-col md:flex-row items-center gap-6 border p-6 rounded-2xl shadow-sm">
-
-        {/* Avatar */}
-        <div className="h-20 w-20 rounded-full bg-green-100 flex items-center justify-center text-2xl font-bold text-green-700">
+    <div className="mx-auto w-11/12 space-y-10 py-10">
+      <div className="flex flex-col items-center gap-6 rounded-2xl border p-6 shadow-sm md:flex-row">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-2xl font-bold text-primary">
           {user?.name?.charAt(0) || "U"}
         </div>
-
-        {/* Info */}
         <div className="flex-1 text-center md:text-left">
           <h2 className="text-2xl font-semibold">{user?.name}</h2>
           <p className="text-muted-foreground">{user?.email}</p>
-          <p className="text-sm text-green-600 mt-1">
-            🌿 {user?.role}
+          <p className="mt-1 text-sm text-primary">
+            {user?.role} • {user?.provider}
           </p>
         </div>
-
-        {/* Action */}
-        <Button
-  variant="outline"
-  onClick={() => setOpen(true)}
->
-  ✏️ Edit Profile
-</Button>
+        <Button variant="outline" onClick={() => setOpen(true)}>
+          Edit profile
+        </Button>
       </div>
 
-      {/* 📊 Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <div className="p-6 border rounded-2xl text-center">
-          <h3 className="text-2xl font-bold text-green-600">
-            {ideas.length}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="rounded-2xl border p-6 text-center">
+          <h3 className="text-2xl font-bold text-primary">
+            {user?.role === "AGENT" ? properties.length : "—"}
           </h3>
-          <p className="text-sm text-muted-foreground">Ideas Submitted</p>
+          <p className="text-sm text-muted-foreground">Listings</p>
         </div>
-
-        <div className="p-6 border rounded-2xl text-center">
-          <h3 className="text-2xl font-bold text-green-600">
-            {totalVotes}
+        <div className="rounded-2xl border p-6 text-center">
+          <h3 className="text-2xl font-bold text-primary">
+            {user?.role === "AGENT" ? totalViews : "—"}
           </h3>
-          <p className="text-sm text-muted-foreground">Total Votes</p>
+          <p className="text-sm text-muted-foreground">Total views</p>
         </div>
-
-        <div className="p-6 border rounded-2xl text-center">
-          <h3 className="text-2xl font-bold text-green-600">
-            {
-              ideas.filter((i) => i.status === "APPROVED").length
-            }
+        <div className="rounded-2xl border p-6 text-center">
+          <h3 className="text-2xl font-bold text-primary">
+            {user?.role === "AGENT" ? activeListings : "—"}
           </h3>
-          <p className="text-sm text-muted-foreground">Approved Ideas</p>
+          <p className="text-sm text-muted-foreground">Active listings</p>
         </div>
-        <EditProfileModal
-  open={open}
-  setOpen={setOpen}
-  user={user}
-  onUpdate={(updatedUser) => setUser(updatedUser)}
-/>
-
       </div>
 
-      
+      <EditProfileModal
+        open={open}
+        setOpen={setOpen}
+        user={user}
+        onUpdate={(updatedUser) => setUser(updatedUser)}
+      />
 
+      {loading && (
+        <p className="text-sm text-muted-foreground">Loading...</p>
+      )}
     </div>
   )
 }

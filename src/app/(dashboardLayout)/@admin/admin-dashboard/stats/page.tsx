@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import { getIdeas } from "@/services/idea2.service";
-import React, { useEffect, useMemo, useState } from "react";
+import { getProperties } from "@/services/property2.service"
+import React, { useEffect, useMemo, useState } from "react"
 import {
   BarChart,
   Bar,
@@ -12,154 +12,104 @@ import {
   PieChart,
   Pie,
   Cell,
-} from "recharts";
+} from "recharts"
+import type { Property } from "@/types/property.types"
 
-type Idea = {
-  id: string;
-  title: string;
-  description: string;
-  isPaid: boolean;
-  price?: number;
-  status: "UNDER_REVIEW" | "APPROVED" | "REJECTED";
-  author: {
-    name: string;
-    email: string;
-  };
-  category: {
-    name: string;
-    id: string;
-  };
-  votes: {
-    type: "UP" | "DOWN";
-  }[];
-};
-
-export default function IdeaPage() {
-  const [ideas, setIdeas] = useState<Idea[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function AdminStatsPage() {
+  const [properties, setProperties] = useState<Property[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchAllIdeas = async () => {
+    const run = async () => {
       try {
-        const data = await getIdeas()
-
-        
-        setIdeas(data);
-      } catch (error) {
-        console.error("Error fetching ideas:", error);
+        const data = await getProperties()
+        setProperties(data)
+      } catch (e) {
+        console.error(e)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
+    run()
+  }, [])
 
-    fetchAllIdeas();
-  }, []);
+  const cityData = useMemo(() => {
+    const map: Record<string, number> = {}
+    properties.forEach((p) => {
+      const k = p.city || "Unknown"
+      map[k] = (map[k] || 0) + 1
+    })
+    return Object.entries(map).map(([name, value]) => ({ name, value }))
+  }, [properties])
 
-  // 📊 CATEGORY DATA
-  const categoryData = useMemo(() => {
-    const map: Record<string, number> = {};
-
-    ideas.forEach((idea) => {
-      const cat = idea.category?.name || "Unknown";
-      map[cat] = (map[cat] || 0) + 1;
-    });
-
-    return Object.entries(map).map(([name, value]) => ({
-      name,
-      value,
-    }));
-  }, [ideas]);
-
-  // 📊 STATUS DATA
   const statusData = useMemo(() => {
-    const map = {
-      APPROVED: 0,
-      UNDER_REVIEW: 0,
-      REJECTED: 0,
-    };
+    const map: Record<string, number> = {}
+    properties.forEach((p) => {
+      const s = String(p.status)
+      map[s] = (map[s] || 0) + 1
+    })
+    return Object.entries(map).map(([name, value]) => ({ name, value }))
+  }, [properties])
 
-    ideas.forEach((i) => map[i.status]++);
+  const typeData = useMemo(() => {
+    const map: Record<string, number> = {}
+    properties.forEach((p) => {
+      const t = String(p.propertyType)
+      map[t] = (map[t] || 0) + 1
+    })
+    return Object.entries(map).map(([name, value]) => ({ name, value }))
+  }, [properties])
 
+  const listingMix = useMemo(() => {
+    let sale = 0
+    let rent = 0
+    properties.forEach((p) => {
+      if (String(p.listingType).toUpperCase() === "RENT") rent++
+      else sale++
+    })
     return [
-      { name: "Approved", value: map.APPROVED },
-      { name: "Pending", value: map.UNDER_REVIEW },
-      { name: "Rejected", value: map.REJECTED },
-    ];
-  }, [ideas]);
+      { name: "Sale", value: sale },
+      { name: "Rent", value: rent },
+    ]
+  }, [properties])
 
-  // 💰 PAID VS FREE
-  const paidData = useMemo(() => {
-    let paid = 0;
-    let free = 0;
+  const COLORS = ["#22c55e", "#f59e0b", "#ef4444", "#3b82f6"]
 
-    ideas.forEach((i) => {
-      i.isPaid ? paid++ : free++;
-    });
+  if (loading) {
+    return <p className="p-6">Loading stats...</p>
+  }
 
-    return [
-      { name: "Paid", value: paid },
-      { name: "Free", value: free },
-    ];
-  }, [ideas]);
-
-  // 👍 VOTES
-  const voteData = useMemo(() => {
-    let up = 0;
-    let down = 0;
-
-    ideas.forEach((idea) => {
-      idea.votes.forEach((v) => {
-        v.type === "UP" ? up++ : down++;
-      });
-    });
-
-    return [
-      { name: "Upvotes", value: up },
-      { name: "Downvotes", value: down },
-    ];
-  }, [ideas]);
-
-  const COLORS = ["#22c55e", "#f59e0b", "#ef4444"];
+  const active = properties.filter((p) => p.status === "ACTIVE").length
+  const pending = properties.filter((p) => p.status === "PENDING").length
 
   return (
-    <div className="w-11/12 mx-auto py-6 space-y-10">
-
-      {/* 📊 KPI CARDS */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 border rounded-xl">
-          <p>Total Ideas</p>
-          <h2 className="text-2xl font-bold">{ideas.length}</h2>
+    <div className="mx-auto w-11/12 space-y-10 py-6">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="rounded-xl border p-4">
+          <p>Total listings</p>
+          <h2 className="text-2xl font-bold">{properties.length}</h2>
         </div>
-
-        <div className="p-4 border rounded-xl">
-          <p>Approved</p>
-          <h2 className="text-2xl font-bold text-green-500">
-            {statusData[0].value}
-          </h2>
+        <div className="rounded-xl border p-4">
+          <p>Active</p>
+          <h2 className="text-2xl font-bold text-green-500">{active}</h2>
         </div>
-
-        <div className="p-4 border rounded-xl">
+        <div className="rounded-xl border p-4">
           <p>Pending</p>
-          <h2 className="text-2xl font-bold text-yellow-500">
-            {statusData[1].value}
-          </h2>
+          <h2 className="text-2xl font-bold text-yellow-500">{pending}</h2>
         </div>
-
-        <div className="p-4 border rounded-xl">
-          <p>Rejected</p>
-          <h2 className="text-2xl font-bold text-red-500">
-            {statusData[2].value}
+        <div className="rounded-xl border p-4">
+          <p>Featured</p>
+          <h2 className="text-2xl font-bold text-blue-500">
+            {properties.filter((p) => p.isFeatured).length}
           </h2>
         </div>
       </div>
 
-      {/* 📊 CATEGORY CHART */}
-      <div className="border rounded-2xl p-6">
-        <h2 className="font-semibold mb-4">Ideas per Category</h2>
-
+      <div className="rounded-2xl border p-6">
+        <h2 className="mb-4 font-semibold">Listings by city</h2>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={categoryData}>
+            <BarChart data={cityData}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
@@ -169,31 +119,39 @@ export default function IdeaPage() {
         </div>
       </div>
 
-      {/* 📊 PIE CHARTS GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        {/* STATUS */}
-        <div className="border rounded-2xl p-4 h-[300px]">
-          <h2 className="font-semibold mb-2">Idea Status</h2>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="h-[300px] rounded-2xl border p-4">
+          <h2 className="mb-2 font-semibold">Status</h2>
           <ResponsiveContainer>
             <PieChart>
               <Pie data={statusData} dataKey="value">
                 {statusData.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i]} />
+                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
         </div>
-
-        {/* PAID VS FREE */}
-        <div className="border rounded-2xl p-4 h-[300px]">
-          <h2 className="font-semibold mb-2">Paid vs Free</h2>
+        <div className="h-[300px] rounded-2xl border p-4">
+          <h2 className="mb-2 font-semibold">Property type</h2>
           <ResponsiveContainer>
             <PieChart>
-              <Pie data={paidData} dataKey="value">
-                {paidData.map((_, i) => (
+              <Pie data={typeData} dataKey="value">
+                {typeData.map((_, i) => (
+                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="h-[300px] rounded-2xl border p-4">
+          <h2 className="mb-2 font-semibold">Sale vs rent</h2>
+          <ResponsiveContainer>
+            <PieChart>
+              <Pie data={listingMix} dataKey="value">
+                {listingMix.map((_, i) => (
                   <Cell key={i} fill={COLORS[i]} />
                 ))}
               </Pie>
@@ -201,21 +159,7 @@ export default function IdeaPage() {
             </PieChart>
           </ResponsiveContainer>
         </div>
-
-        {/* VOTES */}
-        <div className="border rounded-2xl p-4 h-[300px]">
-          <h2 className="font-semibold mb-2">Votes</h2>
-          <ResponsiveContainer>
-            <BarChart data={voteData}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#10b981" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
       </div>
     </div>
-  );
+  )
 }

@@ -15,8 +15,8 @@ export const adminRoutes: Route[] = [
         url: "/admin-dashboard/userstats",
       },
       {
-        title: "All Ideas",
-        url: "/admin-dashboard/allideas",
+        title: "All properties",
+        url: "/admin-dashboard/all-properties",
       },
       {
         title: "All Members",

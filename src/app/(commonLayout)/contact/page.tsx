@@ -4,13 +4,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Leaf, MessageSquare, MapPin } from "lucide-react";
+import {
+  Mail,
+  Building2,
+  MessageSquare,
+  MapPin,
+  Phone,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5 },
+  },
 };
 
 export default function ContactPage() {
@@ -25,13 +35,15 @@ export default function ContactPage() {
           variants={fadeUp}
           className="text-center space-y-4"
         >
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center gap-2">
-            
-            Contact the Green Community
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center gap-3">
+            <Building2 className="w-10 h-10 text-primary" />
+            Contact EstateFlow AI
           </h1>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            Have a sustainability idea, feedback, or need help with your submission?
-            Our team is here to support you in making a positive environmental impact 🌱
+
+          <p className="text-muted-foreground max-w-2xl mx-auto text-base md:text-lg">
+            Looking to buy, rent, or list a property? Need help with AI-powered
+            recommendations, appointments, or property management? Our team is
+            ready to assist you.
           </p>
         </motion.div>
 
@@ -43,22 +55,39 @@ export default function ContactPage() {
             initial="hidden"
             animate="visible"
           >
-            <Card className="rounded-2xl shadow-sm">
+            <Card className="rounded-2xl shadow-sm border">
               <CardContent className="p-8 space-y-6">
-                <h2 className="text-2xl font-semibold">
-                  Share Your Message
-                </h2>
+                <div>
+                  <h2 className="text-2xl font-semibold">
+                    Send Us a Message
+                  </h2>
+
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Fill out the form and our real estate specialists will get
+                    back to you shortly.
+                  </p>
+                </div>
 
                 <form className="space-y-4">
-                  <Input placeholder="Your Name" />
-                  <Input type="email" placeholder="Your Email" />
+                  <Input placeholder="Full Name" />
+
+                  <Input
+                    type="email"
+                    placeholder="Email Address"
+                  />
+
+                  <Input
+                    type="tel"
+                    placeholder="Phone Number"
+                  />
+
                   <Textarea
-                    placeholder="Tell us about your idea, feedback, or question..."
-                    rows={5}
+                    placeholder="Tell us about your property inquiry, buying preferences, rental requirements, or support request..."
+                    rows={6}
                   />
 
                   <Button className="w-full rounded-xl">
-                    Submit Message
+                    Submit Inquiry
                   </Button>
                 </form>
               </CardContent>
@@ -72,45 +101,76 @@ export default function ContactPage() {
             animate="visible"
             className="space-y-6"
           >
-            <Card className="rounded-2xl">
+            <Card className="rounded-2xl border">
               <CardContent className="p-6 flex items-start gap-4">
-                <Mail className="w-6 h-6 text-primary" />
+                <Mail className="w-6 h-6 text-primary shrink-0" />
+
                 <div>
-                  <h3 className="font-semibold">Email Support</h3>
+                  <h3 className="font-semibold">
+                    Email Support
+                  </h3>
+
                   <p className="text-sm text-muted-foreground">
-                    support@greencommunity.org
+                    support@estateflowai.com
                   </p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="rounded-2xl">
+            <Card className="rounded-2xl border">
               <CardContent className="p-6 flex items-start gap-4">
-                <MessageSquare className="w-6 h-6 text-primary" />
+                <Phone className="w-6 h-6 text-primary shrink-0" />
+
                 <div>
-                  <h3 className="font-semibold">Admin Feedback</h3>
+                  <h3 className="font-semibold">
+                    Customer Assistance
+                  </h3>
+
                   <p className="text-sm text-muted-foreground">
-                    Get guidance on your submitted ideas and improve them with expert feedback.
+                    Speak with our property advisors for buying, renting,
+                    or listing guidance.
                   </p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="rounded-2xl">
+            <Card className="rounded-2xl border">
               <CardContent className="p-6 flex items-start gap-4">
-                <MapPin className="w-6 h-6 text-primary" />
+                <MessageSquare className="w-6 h-6 text-primary shrink-0" />
+
                 <div>
-                  <h3 className="font-semibold">Community Base</h3>
+                  <h3 className="font-semibold">
+                    AI Property Consultation
+                  </h3>
+
                   <p className="text-sm text-muted-foreground">
-                    Dhaka, Bangladesh (Serving a global eco-community)
+                    Get intelligent property recommendations tailored to your
+                    budget, lifestyle, and preferences.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-2xl border">
+              <CardContent className="p-6 flex items-start gap-4">
+                <MapPin className="w-6 h-6 text-primary shrink-0" />
+
+                <div>
+                  <h3 className="font-semibold">
+                    Headquarters
+                  </h3>
+
+                  <p className="text-sm text-muted-foreground">
+                    Dhaka, Bangladesh — Serving buyers, renters, agents,
+                    and property investors globally.
                   </p>
                 </div>
               </CardContent>
             </Card>
 
             {/* EXTRA NOTE */}
-            <div className="text-sm text-muted-foreground">
-              🌿 Our team typically responds within 24 hours.
+            <div className="rounded-xl border bg-muted/30 p-4 text-sm text-muted-foreground">
+              Our support team usually responds within 24 hours.
             </div>
           </motion.div>
         </div>
@@ -123,17 +183,37 @@ export default function ContactPage() {
           className="text-center space-y-4"
         >
           <h2 className="text-2xl font-semibold">
-            Explore Ideas & Get Inspired
+            Discover Smart Real Estate Solutions
           </h2>
-          <p className="text-muted-foreground">
-            Discover sustainable ideas shared by the community or learn how to contribute your own.
+
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Browse premium properties, explore AI-powered recommendations,
+            and connect with verified agents through EstateFlow AI.
           </p>
 
-          <Button size="lg" variant="outline" className="rounded-xl" asChild>
-            <Link href="/help">Visit Help Center</Link>
-          </Button>
-        </motion.div>
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            <Button
+              size="lg"
+              className="rounded-xl"
+              asChild
+            >
+              <Link href="/properties">
+                Browse Properties
+              </Link>
+            </Button>
 
+            <Button
+              size="lg"
+              variant="outline"
+              className="rounded-xl"
+              asChild
+            >
+              <Link href="/help">
+                Visit Help Center
+              </Link>
+            </Button>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

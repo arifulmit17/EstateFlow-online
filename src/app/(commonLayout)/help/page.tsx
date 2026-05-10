@@ -1,86 +1,205 @@
 "use client";
 
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Leaf } from "lucide-react";
-import Link from "next/link";
+
+import {
+  MessageCircle,
+  Building2,
+  Home,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 
 export default function HelpPage() {
   return (
-    <div className="min-h-screen bg-background px-4 py-10 flex justify-center">
-      <div className="w-full max-w-4xl space-y-8">
-        
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold flex items-center justify-center gap-2">
-            🌿 Green Community Portal
-          </h1>
-          <p className="text-muted-foreground">
-            Share sustainable ideas, collaborate with others, and help build a greener future 🌱
+    <div className="min-h-screen bg-background px-4 py-12 flex justify-center">
+      <div className="w-full max-w-5xl space-y-10">
+
+        {/* HEADER */}
+        <div className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            <Building2 className="w-10 h-10 text-primary" />
+
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+              EstateFlow AI Help Center
+            </h1>
+          </div>
+
+          <p className="text-muted-foreground max-w-3xl mx-auto text-base md:text-lg leading-relaxed">
+            Get support for property discovery, AI-powered recommendations,
+            appointments, listings, verified agents, and account management.
           </p>
         </div>
 
-        {/* FAQ Section */}
-        <Card>
+        {/* QUICK SUPPORT CARDS */}
+        <div className="grid md:grid-cols-3 gap-6">
+
+          <Card className="rounded-3xl border">
+            <CardContent className="p-6 space-y-4">
+              <Home className="w-10 h-10 text-primary" />
+
+              <div className="space-y-2">
+                <h3 className="text-xl font-semibold">
+                  Property Search
+                </h3>
+
+                <p className="text-sm text-muted-foreground">
+                  Browse properties using smart filters, AI recommendations,
+                  location search, and advanced property insights.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl border">
+            <CardContent className="p-6 space-y-4">
+              <ShieldCheck className="w-10 h-10 text-primary" />
+
+              <div className="space-y-2">
+                <h3 className="text-xl font-semibold">
+                  Verified Listings
+                </h3>
+
+                <p className="text-sm text-muted-foreground">
+                  Explore trusted property listings and connect with verified
+                  real estate agents securely.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl border">
+            <CardContent className="p-6 space-y-4">
+              <Sparkles className="w-10 h-10 text-primary" />
+
+              <div className="space-y-2">
+                <h3 className="text-xl font-semibold">
+                  AI Assistance
+                </h3>
+
+                <p className="text-sm text-muted-foreground">
+                  Receive intelligent property suggestions tailored to your
+                  preferences, lifestyle, and budget.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+        </div>
+
+        {/* FAQ SECTION */}
+        <Card className="rounded-3xl border">
           <CardHeader>
-            <CardTitle>Frequently Asked Questions</CardTitle>
+            <CardTitle className="text-2xl">
+              Frequently Asked Questions
+            </CardTitle>
           </CardHeader>
+
           <CardContent>
-            <Accordion type="single" collapsible className="w-full">
-              
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full"
+            >
+
               <AccordionItem value="item-1">
                 <AccordionTrigger>
-                  How do I submit a sustainable idea?
+                  How do I search for properties?
                 </AccordionTrigger>
+
                 <AccordionContent>
-                  Go to the "Submit Idea" page, describe your idea (e.g., reducing plastic use or solar initiatives), 
-                  and submit it for review. Admins will evaluate and publish it if approved.
+                  Use the property search page to filter listings by
+                  location, price range, property type, bedrooms,
+                  amenities, and more. EstateFlow AI also provides
+                  personalized recommendations based on your preferences.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-2">
                 <AccordionTrigger>
-                  What kind of ideas can I share?
+                  Can I schedule a property visit?
                 </AccordionTrigger>
+
                 <AccordionContent>
-                  You can share any eco-friendly idea such as waste reduction, renewable energy projects, 
-                  recycling initiatives, or community awareness programs.
+                  Yes. You can book appointments directly from a property
+                  listing page and connect with agents to arrange virtual
+                  or in-person visits.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-3">
                 <AccordionTrigger>
-                  How are ideas reviewed?
+                  How does the AI recommendation system work?
                 </AccordionTrigger>
+
                 <AccordionContent>
-                  Admins monitor all submissions, provide feedback if needed, and ensure the best and most impactful 
-                  ideas are published for all community members to explore.
+                  Our AI analyzes your browsing activity, preferences,
+                  location interests, budget, and saved properties to
+                  recommend listings that best match your needs.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-4">
                 <AccordionTrigger>
-                  Can I interact with other community members?
+                  Are all property listings verified?
                 </AccordionTrigger>
+
                 <AccordionContent>
-                  Yes! You can view published ideas, share feedback, and collaborate with others to improve and 
-                  implement sustainable solutions.
+                  EstateFlow AI prioritizes verified listings and trusted
+                  agents to provide a safer and more reliable property
+                  discovery experience.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-5">
                 <AccordionTrigger>
-                  Can I edit or update my idea?
+                  Can agents manage their own listings?
                 </AccordionTrigger>
+
                 <AccordionContent>
-                  Yes, you can update your submitted ideas from your dashboard before or after admin feedback.
+                  Yes. Agents can create, update, manage, and monitor
+                  their property listings through the dedicated agent
+                  dashboard.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-6">
+                <AccordionTrigger>
+                  Can I save properties for later?
+                </AccordionTrigger>
+
+                <AccordionContent>
+                  Absolutely. Users can save favorite properties to their
+                  profile and access them anytime from their dashboard.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-7">
+                <AccordionTrigger>
+                  Does EstateFlow AI support virtual tours?
+                </AccordionTrigger>
+
+                <AccordionContent>
+                  Yes. Many listings include virtual tours, property
+                  galleries, and video walkthroughs for a more immersive
+                  property viewing experience.
                 </AccordionContent>
               </AccordionItem>
 
@@ -88,21 +207,45 @@ export default function HelpPage() {
           </CardContent>
         </Card>
 
-        {/* Contact Support */}
-        <Card>
+        {/* CONTACT SUPPORT */}
+        <Card className="rounded-3xl border">
           <CardHeader>
-            <CardTitle>Need more help?</CardTitle>
+            <CardTitle className="text-2xl">
+              Need More Help?
+            </CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-muted-foreground flex items-center gap-2">
-              <MessageCircle className="w-4 h-4" />
-              Reach out to our team for support or guidance on your sustainability ideas
-            </p>
-            <Button asChild>
-              <Link href="/contact">Contact Admin</Link>
-            </Button>
+
+          <CardContent className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-2">
+              <p className="text-muted-foreground flex items-center gap-2">
+                <MessageCircle className="w-4 h-4" />
+
+                Contact our support team for assistance with property
+                listings, appointments, AI recommendations, or account
+                management.
+              </p>
+            </div>
+
+            <div className="flex gap-4 flex-wrap">
+              <Button asChild className="rounded-xl">
+                <Link href="/contact">
+                  Contact Support
+                </Link>
+              </Button>
+
+              <Button
+                variant="outline"
+                asChild
+                className="rounded-xl"
+              >
+                <Link href="/properties">
+                  Browse Properties
+                </Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
+
       </div>
     </div>
   );
