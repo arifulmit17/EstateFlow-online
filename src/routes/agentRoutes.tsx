@@ -13,6 +13,14 @@ export const agentRoutes: Route[] = [
         url: "/agent-dashboard/overview",
       },
       {
+        title: "Create Listing",
+        url: "/agent-dashboard/create-listing",
+      },
+      {
+        title: "My Listings",
+        url: "/agent-dashboard/my-listings",
+      },
+      {
         title: "Listings",
         url: "/agent-dashboard/listings",
       },

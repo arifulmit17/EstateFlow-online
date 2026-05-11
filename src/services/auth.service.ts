@@ -11,9 +11,12 @@ export const signupUser = async (userData: {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
+  image?: string;
+  role: "BUYER" | "AGENT";
 }) => {
   try {
-    
+    console.log(userData);
     const res = await fetch(`${BASE_URL}/api/auth/register`, {
       method: "POST",
       headers: {

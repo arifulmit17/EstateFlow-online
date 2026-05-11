@@ -12,14 +12,6 @@ export const buyerRoutes: Route[] = [
         title: "Profile",
         url: "/dashboard/profile",
       },
-      {
-        title: "Create listing",
-        url: "/dashboard/create-listing",
-      },
-      {
-        title: "My listings",
-        url: "/dashboard/my-listings",
-      },
     ],
   },
 ];

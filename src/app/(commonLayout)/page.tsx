@@ -34,7 +34,7 @@ export default function Home() {
       </section>
       <section className="section">
             <div className="w-full text-5xl text-center"> 
-               <h1 >Popular Categories</h1>
+               <h1 >Popular Types</h1>
             </div>
             
            <Categories></Categories>
