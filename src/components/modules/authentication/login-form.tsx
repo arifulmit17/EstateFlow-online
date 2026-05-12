@@ -44,6 +44,12 @@ export function LoginForm({
   await handleSubmit(new Event("submit") as any)
 }
 
+const handleAgentLogin = async () => {
+  setEmail("mehrab@gmail.com")
+  setPassword("password1234")
+  
+  await handleSubmit(new Event("submit") as any)
+}
 const handleAdminLogin = async () => {
   setEmail("jamal@example.com")
   setPassword("admin1234")
@@ -144,6 +150,10 @@ const handleAdminLogin = async () => {
           <div className="flex flex-col gap-5 py-5">
             <Button onClick={handleDemoLogin} type="submit" disabled={loading} className="w-full">
                   {loading ? "Logging in..." : "Demo User Login"}
+                </Button>
+            
+                <Button onClick={handleAgentLogin} type="submit" disabled={loading} className="w-full">
+                  {loading ? "Logging in..." : "Demo Agent Login"}
                 </Button>
                 <Button onClick={handleAdminLogin} type="submit" disabled={loading} className="w-full">
                   {loading ? "Logging in..." : "Demo Admin Login"}

@@ -50,6 +50,53 @@ export const getAppointmentById = async (id: string) => {
   }
 };
 
+
+
+
+
+export const getAppointmentsByAgentId = async (
+  agentId: string
+) => {
+  try {
+    const cookieStore = await cookies();
+
+    const token =
+      cookieStore.get("token")?.value;
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/appointment/agent/${agentId}`,
+      {
+        method: "GET",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(
+        "Failed to fetch appointments"
+      );
+    }
+
+    const data = await res.json();
+
+    return data.data;
+  } catch (error) {
+    console.error(
+      "Error fetching appointments:",
+      error
+    );
+
+    return [];
+  }
+};
+
+
 export const createAppointment = async (payload: {
   propertyId: string;
   agentId: string;

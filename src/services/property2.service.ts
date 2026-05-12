@@ -86,6 +86,64 @@ export async function fetchPropertyBySlug(
   }
 }
 
+
+
+export async function deleteProperty(
+  propertyId: string
+) {
+  try {
+    const cookieStore = await cookies();
+
+    const token =
+      cookieStore.get("token")?.value;
+
+    const res = await fetch(
+      `${BASE_URL}/api/property/${propertyId}`,
+      {
+        method: "DELETE",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+
+        cache: "no-store",
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(
+        data?.message ||
+          "Failed to delete property"
+      );
+    }
+
+    return {
+      success: true,
+      message:
+        data?.message ||
+        "Property deleted successfully",
+      data: data?.data,
+    };
+  } catch (error: any) {
+    console.error(
+      "Delete property error:",
+      error
+    );
+
+    return {
+      success: false,
+      message:
+        error.message ||
+        "Something went wrong",
+    };
+  }
+}
+
+
+
 export type CreatePropertyInput = {
   title: string
   slug: string
@@ -140,6 +198,36 @@ export async function createProperty(
   } catch (e) {
     console.error("createProperty:", e)
     return null
+  }
+}
+
+export async function updateProperty(
+  propertyId: string,
+  updates: Partial<CreatePropertyInput>
+) {
+  const headers = await authHeaders()
+
+  if (!headers) return { success: false, message: "Unauthorized" }
+  try {
+    const res = await fetch(`${BASE_URL}/api/property/${propertyId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...headers,
+      },
+      body: JSON.stringify(updates),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      return {
+        success: false,
+        message: data?.message || "Failed to update property",
+      }
+    }
+    return { success: true, data: data.data, message: data.message }
+  } catch (e) {
+    console.error("updateProperty:", e)
+    return { success: false, message: "Something went wrong" }
   }
 }
 

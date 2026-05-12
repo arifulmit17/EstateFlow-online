@@ -17,10 +17,6 @@ export const agentRoutes: Route[] = [
         url: "/agent-dashboard/create-listing",
       },
       {
-        title: "My Listings",
-        url: "/agent-dashboard/my-listings",
-      },
-      {
         title: "Listings",
         url: "/agent-dashboard/listings",
       },
