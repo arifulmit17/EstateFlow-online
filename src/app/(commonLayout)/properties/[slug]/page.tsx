@@ -5,12 +5,15 @@ import { useParams } from "next/navigation"
 import Link from "next/link"
 import { fetchPropertyBySlug } from "@/services/property2.service"
 import type { Property } from "@/types/property.types"
+import BookAppointmentButton from "@/components/shared/BookAppointmentButton"
+import { getUser } from "@/services/auth.service"
 
 export default function PropertyDetailPage() {
   const params = useParams()
   const slug = params.slug as string
   const [property, setProperty] = useState<Property | null>(null)
   const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const run = async () => {
@@ -22,6 +25,21 @@ export default function PropertyDetailPage() {
     run()
   }, [slug])
 
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const res = await getUser();
+        setUser(res || null);
+      } catch (error) {
+        console.error("Failed to fetch current user:", error);
+      } finally {
+        setLoading(false);
+      }   
+    };
+
+    fetchCurrentUser();
+  }, [property])
+
   if (loading) {
     return <p className="py-20 text-center">Loading...</p>
   }
@@ -31,6 +49,8 @@ export default function PropertyDetailPage() {
   }
 
   const img = property.thumbnail
+
+
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-10">
@@ -81,6 +101,13 @@ export default function PropertyDetailPage() {
             </p>
           </>
         )}
+      </div>
+      <div>
+        <BookAppointmentButton
+          propertyId={property.id}
+          agentId={property.agentId}
+          buyerId={user?.id}
+        ></BookAppointmentButton>
       </div>
 
       <div className="mt-10">

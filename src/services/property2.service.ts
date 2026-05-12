@@ -29,6 +29,20 @@ export async function getProperties(): Promise<Property[]> {
   }
 }
 
+export const getPropertyById = async (id: string): Promise<Property | null> => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/property/${id}`, { method: "GET", cache: "no-store" })
+    const result = await res.json()
+    if (!res.ok || !result.success) {
+      throw new Error(result?.message || "Failed to fetch property")
+    }
+    return result.data ?? null
+  } catch (e) {
+    console.error("getPropertyById:", e)
+    return null
+  }
+}
+
 export async function fetchPropertiesByAgentId(
   agentId: string
 ): Promise<Property[]> {

@@ -17,6 +17,7 @@ import {
 
 import { useEffect, useState } from "react";
 import { getAllUsers } from "@/services/user.service";
+import AgentCard from "@/components/cards/AgentCard";
 
 interface User {
   id: string;
@@ -123,84 +124,7 @@ export default function AgentsPage() {
                 variants={fadeUp}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="rounded-3xl overflow-hidden group hover:shadow-xl transition">
-                  
-                  {/* IMAGE */}
-                  <div className="relative h-[320px] bg-muted overflow-hidden">
-                    <Image
-                      src={agent.avatar || "/placeholder-agent.jpg"}
-                      alt={agent.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition"
-                    />
-
-                    {agent.isVerified && (
-                      <div className="absolute top-4 right-4 bg-background/90 px-3 py-1 rounded-full flex items-center gap-1 text-xs">
-                        <BadgeCheck className="w-4 h-4 text-primary" />
-                        Verified
-                      </div>
-                    )}
-                  </div>
-
-                  {/* CONTENT */}
-                  <CardContent className="p-6 space-y-4">
-                    <div>
-                      <h2 className="text-2xl font-semibold">
-                        {agent.name}
-                      </h2>
-
-                      <p className="text-sm text-muted-foreground">
-                        {agent.bio || "Real Estate Agent"}
-                      </p>
-                    </div>
-
-                    {/* SIMPLE STATS (based on real schema only) */}
-                    <div className="flex items-center justify-between text-sm">
-                      <div>
-                        <p className="font-semibold text-lg">
-                          {agent.properties?.length || 0}
-                        </p>
-                        <p className="text-muted-foreground">Properties</p>
-                      </div>
-
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="font-semibold">4.5</span>
-                      </div>
-                    </div>
-
-                    {/* CONTACT */}
-                    <div className="space-y-2 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4" />
-                        {agent.email}
-                      </div>
-
-                      {agent.phone && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          {agent.phone}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* ACTIONS */}
-                    <div className="flex gap-3 pt-2">
-                      <Button className="flex-1 rounded-xl" asChild>
-                        <Link href={`/agents/${agent.id}`}>
-                          View Profile
-                        </Link>
-                      </Button>
-
-                      <Button variant="outline" className="flex-1 rounded-xl" asChild>
-                        <Link href="/contact">
-                          Contact
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-
-                </Card>
+               <AgentCard agent={agent} index={index} />
               </motion.div>
             ))}
           </div>

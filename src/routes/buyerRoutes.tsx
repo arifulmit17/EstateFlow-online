@@ -12,6 +12,10 @@ export const buyerRoutes: Route[] = [
         title: "Profile",
         url: "/dashboard/profile",
       },
+      {
+        title: "My Bookings",
+        url: "/dashboard/my-listings",
+      },
     ],
   },
 ];

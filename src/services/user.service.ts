@@ -22,6 +22,26 @@ export const getAllUsers = async () => {
     
 }
 
+export  const getUserById = async (id: string) => {
+    const cookieStore =await cookies();
+      const token = cookieStore.get("token")?.value;
+      
+      if (!token) return null;
+    const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${id}`,
+         {
+            headers:{
+            Cookie: `token=${token}`,
+          }
+         } 
+        )
+
+        const result = await res.json()
+        // console.log("user by id",result);
+        return result.data || null
+    
+}
+
 export const ChangeUserRole = async (id: string, role: string) => {
     const cookieStore =await cookies();
       const token = cookieStore.get("token")?.value;

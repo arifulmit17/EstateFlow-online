@@ -152,14 +152,14 @@ export default function MembersPage() {
   <td className="p-3 text-center space-x-2">
 
     {/* Role */}
-    {role !== "ADMIN" ? (
+    {role !== "ADMIN" && role !== "AGENT" ? (
       <Button
         size="sm"
         onClick={() =>
-          user.id && handleRoleChange(user.id, "ADMIN")
+          user.id && handleRoleChange(user.id, "AGENT")
         }
       >
-        Make Admin
+        Make Agent
       </Button>
     ) : (
       <Button
@@ -169,7 +169,7 @@ export default function MembersPage() {
           user.id && handleRoleChange(user.id, "BUYER")
         }
       >
-        Remove Admin
+        Remove Agent
       </Button>
     )}
 
